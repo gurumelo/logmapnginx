@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<head>
+	<meta charser="utf-8">
+	<title>logmap</title>
+	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.0.1/dist/leaflet.css" />
+	<style>
+	body {
+		padding: 0;
+		margin: 0;
+	}
+	html, body, #mapa {
+		height: 100vh;
+		width: 100vw;
+	}
+	#log {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		padding: 10px 20px;
+		background: yellow;
+		color: #383838;
+		font-family: Consolas,Monaco,monospace;
+		font-size: 12px;
+		z-index: 9999;
+	}
+	</style>
+</head>
+<body>
+	<div id="log"></div>
+	<div id="mapa"></div>
+	<script src="https://unpkg.com/leaflet@1.0.1/dist/leaflet.js"></script>
+	<script src="/socket.io/socket.io.js"></script>
+	<script type="text/javascript">
+		var mymap = L.map('mapa').setView([51.505, -0.09], 3);
+		L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+			attribution: '',
+			maxZoom: 18,
+		}).addTo(mymap);
+		var marca;
+		function crearmarca(la,lo) {
+			mymap.panTo(new L.LatLng(la,lo));
+			marca = new L.Marker([la,lo]);
+			mymap.addLayer(marca);
+		};
+		//map.removeLayer(marker);
+		var socket = io();
+		socket.on('oo', function (data) {
+			console.log(data);
+			if (marca) {			
+				mymap.removeLayer(marca);
+				crearmarca(data.latitud, data.longitud);
+				document.getElementById('log').innerHTML = data.ip +' :) '+ data.peticion;
+			}
+			else {
+				crearmarca(data.latitud, data.longitud);
+				document.getElementById('log').innerHTML = data.ip +' :) '+ data.peticion;
+			}
+		});
+	</script>
+</body>
+</html>
