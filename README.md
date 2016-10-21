@@ -1,6 +1,6 @@
 #logmapnginx
 
-![](http://i.imgur.com/hMW5H12.gif)
+![](http://i.imgur.com/mAxeV2Y.gif)
 
 
 ```
